@@ -61,7 +61,11 @@ public class WayPointSystem : MonoBehaviour
             NavGraphPoint wpData = new NavGraphPoint();
             wpData.id = point.GetComponent<WayPoint>().id;
             wpData.sceneIndex = point.GetComponent<WayPoint>().sceneIndex;
-            wpData.doorPairID = point.GetComponent<WayPoint>().doorPairID;
+            //wpData.doorPairID = point.GetComponent<WayPoint>().doorPairID;
+            if(point.GetComponent<WayPoint>().isDoor)
+            {
+                wpData.connectedIDs.Add(point.GetComponent<WayPoint>().doorPairID);
+            }
             wpData.position = point.transform.position;
             foreach (var conP in point.GetComponent<WayPoint>().connectedPoints)
             {

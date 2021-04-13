@@ -8,7 +8,9 @@ public class NPC : MonoBehaviour
     public NavGraphData navGraphData;
     public float speed;
     int currentSceneIndex;
-    NavGraphPoint startPoint;
+    NavGraphPoint startPoint, targetPoint;
+    List<NavGraphPoint> targetPath;
+
 
     bool startPosFlag = true;
 
@@ -33,6 +35,12 @@ public class NPC : MonoBehaviour
     void Update()
     {
         MoveToStartPos();
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            targetPoint = getRandomTargetPoint();
+            targetPath = FindPath.FindPathBFS(startPoint, targetPoint, navGraphData.GetData());
+            MoveToTargetPos();
+        }
     }
 
     void MoveToStartPos()
@@ -47,6 +55,33 @@ public class NPC : MonoBehaviour
             {
                 startPosFlag = false;
             }
+        }
+    }
+
+    NavGraphPoint getRandomTargetPoint()
+    {
+        int index = Random.Range(0, navGraphData.GetData().Count);
+        NavGraphPoint result = navGraphData.GetData()[index];
+        Debug.Log("Target point: " + result.id.ToString());
+        return result;
+    }
+
+    void MoveToTargetPos()
+    {
+        if(targetPath.Count == 0)
+        {
+            Debug.Log("Can not find path to target point!");
+            return;
+        }
+        else
+        {
+            string resultStr = "";
+            foreach (var item in targetPath)
+            {
+                resultStr += " -> ";
+                resultStr += item.id.ToString();
+            }
+            Debug.Log(resultStr);
         }
     }
 }
