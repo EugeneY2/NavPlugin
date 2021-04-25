@@ -2,11 +2,10 @@ using System.Collections.Generic;
 
 static class FindPath
 {
-    public static List<NavGraphPoint> FindPathBFS(NavGraphPoint start, NavGraphPoint end, List<NavGraphPoint> navGraph)
+    public static List<NavGraphPoint> FindPathBFS(NavGraphPoint start, NavGraphPoint end, Dictionary<int, NavGraphPoint> navGraph)
     {
         List<NavGraphPoint> result = new List<NavGraphPoint>();
         Queue<NavGraphPoint> pointsToCheck = new Queue<NavGraphPoint>();
-        List<int> checkedPoints = new List<int>();
         Dictionary<int, int> predecessor = new Dictionary<int, int>();
         bool findComplete = false;
         NavGraphPoint currentPoint;
@@ -20,7 +19,7 @@ static class FindPath
             connected = currentPoint.connectedIDs;
             foreach (var item in connected)
             {
-                if (!checkedPoints.Contains(item) && !pointsToCheck.Contains(navGraph.Find(x => x.id == item)))
+                if (!predecessor.ContainsKey(item) && !predecessor.ContainsValue(item))
                 {
                     if (item == end.id)
                     {
@@ -32,11 +31,12 @@ static class FindPath
                     else
                     {
                         predecessor.Add(item, currentPoint.id);
-                        pointsToCheck.Enqueue(navGraph.Find(x => x.id == item));
+                        NavGraphPoint t;
+                        navGraph.TryGetValue(item, out t);
+                        pointsToCheck.Enqueue(t);
                     }
                 }
             }
-            checkedPoints.Add(currentPoint.id);
         }
         if (findComplete)
         {
@@ -47,7 +47,7 @@ static class FindPath
                 result.Insert(0, temp);
                 if (predecessor.TryGetValue(temp.id, out predID))
                 {
-                    temp = navGraph.Find(x => x.id == predID);
+                    navGraph.TryGetValue(predID, out temp);
                 }
             }
         }

@@ -24,6 +24,7 @@ public class NavGraphData : ScriptableObject
         }
         else
         {
+            data = new List<NavGraphPoint>();
             data.Add(item);
         }
     }
