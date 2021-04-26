@@ -1,38 +1,24 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class NPC : MonoBehaviour
+public class Npc : MonoBehaviour
 {
     public float speed;
-    int currentSceneIndex;
-    NavGraphPoint startPoint, targetPoint;
-    List<NavGraphPoint> targetPath;
-
-    bool startPosFlag = true;
+    public float npcHeight;
+    public GameObject startWayPoint;
+    public NpcData data;
 
     void Start()
     {
-        currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        transform.position = data.Position;
     }
 
-    void Update()
+    public void AddToNpcData()
     {
-        
-    }
-
-    void MoveToStartPos()
-    {
-        if (startPosFlag)
-        {
-            if (Vector3.Distance(transform.position, startPoint.position) > 0.5f)
-            {
-                gameObject.transform.Translate((startPoint.position - transform.position) * Time.deltaTime, Space.World);
-            }
-            else
-            {
-                startPosFlag = false;
-            }
-        }
+        data.SceneIndex = SceneManager.GetActiveScene().buildIndex;
+        data.CurrentPointID = startWayPoint.GetComponent<WayPoint>().id;
+        data.Position = startWayPoint.GetComponent<WayPoint>().transform.position + new Vector3(0, npcHeight / 2, 0);
+        data.Speed = speed;
+        data.Height = npcHeight;
     }
 }

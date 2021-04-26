@@ -708,6 +708,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 10
+  npcHeight: 2
+  startWayPoint: {fileID: 1899541883}
+  data: {fileID: 11400000, guid: c3314a0fc64c4214fa5cd2f0291c1a54, type: 2}
 --- !u!1 &1881074821
 GameObject:
   m_ObjectHideFlags: 0
@@ -825,8 +828,8 @@ GameObject:
   - component: {fileID: 2066508623}
   - component: {fileID: 2066508624}
   m_Layer: 0
-  m_Name: PathFinder
-  m_TagString: Untagged
+  m_Name: NavController
+  m_TagString: NavController
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -858,4 +861,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   navGraphData: {fileID: 11400000, guid: 537c175d2a662ee4f88a97385a268d4d, type: 2}
-  startPointId: 13
+  npcData: {fileID: 11400000, guid: c3314a0fc64c4214fa5cd2f0291c1a54, type: 2}

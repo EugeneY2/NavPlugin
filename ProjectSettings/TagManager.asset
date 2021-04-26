@@ -6,6 +6,7 @@ TagManager:
   tags:
   - WP
   - WP_Root
+  - NavController
   layers:
   - Default
   - TransparentFX
