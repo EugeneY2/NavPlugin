@@ -4,7 +4,7 @@ using System.Collections.Generic;
 [CreateAssetMenu(fileName = "NavGraphData", menuName = "NavGraphData", order = 0)]
 public class NavGraphData : ScriptableObject
 { 
-    List<NavGraphPoint> data;
+    public List<NavGraphPoint> data;
 
     public void AddToData(NavGraphPoint item)
     {
