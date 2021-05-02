@@ -4,35 +4,13 @@ using UnityEngine;
 public class NpcData : ScriptableObject
 { 
     [SerializeField]
-    int currentSceneIndex, currentPointId;
+    public int currentSceneIndex;
     [SerializeField]
-    Vector3 currentPosition;
+    public int currentPointId;
     [SerializeField]
-    float speed, height;
-
-    public int SceneIndex
-    {
-        get{return currentSceneIndex;}
-        set{currentSceneIndex = value;}
-    }
-    public int CurrentPointID
-    {
-        get{return currentPointId;}
-        set{currentPointId = value;}
-    }
-    public Vector3 Position
-    {
-        get{return currentPosition;}
-        set{currentPosition = value;}
-    }
-    public float Speed
-    {
-        get{return speed;}
-        set{speed = value;}
-    } 
-    public float Height
-    {
-        get{return height;}
-        set{height = value;}
-    } 
+    public Vector3 currentPosition;
+    [SerializeField]
+    public float speed;
+    [SerializeField]
+    public float height;
 }

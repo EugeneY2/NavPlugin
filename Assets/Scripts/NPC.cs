@@ -1,51 +1,64 @@
 using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 
 public class Npc : MonoBehaviour
 {
-    public float speed;
-    public float npcHeight;
     public GameObject startWayPoint;
-    public NpcData data;
-
-    NpcData activeData;
+    public NpcData npcDataStorage;
+    NavMeshAgent agent;
+    NavController controller;
+    public bool moving {get; set;}
 
     void Start()
     {
-        activeData = GameObject.FindGameObjectWithTag("NavController").GetComponent<NavController>().npcData;
-
-        if (activeData.SceneIndex == SceneManager.GetActiveScene().buildIndex)
+        controller = GameObject.FindGameObjectWithTag("NavController").GetComponent<NavController>();
+        agent = GetComponent<NavMeshAgent>();
+        if (controller.editableNpcData.currentSceneIndex == SceneManager.GetActiveScene().buildIndex)
         {
-            transform.position = activeData.Position;
+            transform.position = controller.editableNpcData.currentPosition;
         }
-
-    }
-
-    // FOR TESTING PURPOSES
-    void Update()
-    {
-        transform.position = activeData.Position;
+        moving = false;
     }
 
     public void AddToNpcData()
     {
-        data.SceneIndex = SceneManager.GetActiveScene().buildIndex;
-        data.CurrentPointID = startWayPoint.GetComponent<WayPoint>().id;
-        data.Position = startWayPoint.GetComponent<WayPoint>().transform.position + new Vector3(0, npcHeight / 2, 0);
-        data.Speed = speed;
-        data.Height = npcHeight;
+        agent = GetComponent<NavMeshAgent>();
+        npcDataStorage.currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        npcDataStorage.currentPointId = startWayPoint.GetComponent<WayPoint>().id;
+        npcDataStorage.currentPosition = startWayPoint.GetComponent<WayPoint>().transform.position + new Vector3(0, agent.height / 2, 0);
+        npcDataStorage.speed = agent.speed;
+        npcDataStorage.height = agent.height;
     }
 
     public void moveTo(NavGraphPoint point)
     {
-        StartCoroutine(move(point));
-        print("я пошелъ");
+        agent = GetComponent<NavMeshAgent>();
+        agent.SetDestination(point.position + new Vector3(0, controller.editableNpcData.height / 2, 0));
+        moving = true;
+        StartCoroutine(checkDistance(point.position + new Vector3(0, controller.editableNpcData.height / 2, 0), point.id));
     }
 
-    public IEnumerator move(NavGraphPoint point)
+    IEnumerator checkDistance(Vector3 pos, int id)
     {
-        yield return null;
+        while (true)
+        {
+            if (Mathf.Abs(Vector3.Distance(transform.position, pos)) < 0.1f)
+            {
+                controller.editableNpcData.currentPointId = id;
+                moving = false;
+                controller.chooseNextPoint = true;
+                yield break;
+            }
+            yield return null;
+        }
+
+    }
+
+    public Vector3 GetPosition()
+    {
+        return transform.position;
     }
 }

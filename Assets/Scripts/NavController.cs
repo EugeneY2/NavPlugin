@@ -12,9 +12,12 @@ public class NavController : MonoBehaviour
     List<NavGraphPoint> targetPath;
     Dictionary<int, NavGraphPoint> navData;
     bool isMoving = false;
-
-    GameObject activeNpc;
+    public bool chooseNextPoint { get; set; }
+    bool isSceneChange = false;
+    Npc activeNpc;
     GameObject[] npcs;
+    NavGraphPoint nextPoint;
+    public NpcData editableNpcData { get; set; }
 
     void Awake()
     {
@@ -24,6 +27,7 @@ public class NavController : MonoBehaviour
             Destroy(this.gameObject);
         }
         DontDestroyOnLoad(this.gameObject);
+        editableNpcData = Instantiate(npcData);
     }
 
     void Start()
@@ -33,14 +37,14 @@ public class NavController : MonoBehaviour
         {
             navData.Add(item.id, item);
         }
-        npcData = Instantiate(npcData);
 
         npcs = GameObject.FindGameObjectsWithTag("NPC");
         if (npcs.Length > 0)
         {
-            print("asdd");
-            activeNpc = npcs[0];
+            activeNpc = npcs[0].GetComponent<Npc>();
         }
+
+        chooseNextPoint = true;
     }
 
     void Update()
@@ -50,31 +54,25 @@ public class NavController : MonoBehaviour
         {
             if (!isMoving)
             {
-                navData.TryGetValue(npcData.CurrentPointID, out startPoint);
+                navData.TryGetValue(editableNpcData.currentPointId, out startPoint);
                 ChooseRandomTargetPoint();
                 BuildPathToTargetPoint();
-                isMoving = true;
-                StartCoroutine(MoveToTargetPoint());
             }
         }
-        if (Input.GetKeyDown(KeyCode.N))
-        {
-            print("SceneIndex: " + npcData.SceneIndex.ToString());
-            print("CurrentPointID: " + npcData.CurrentPointID.ToString());
-            print("Position: " + npcData.Position.ToString());
-            print("Speed: " + npcData.Speed.ToString());
-            print("Height: " + npcData.Height.ToString());
-        }
+        // if (Input.GetKeyDown(KeyCode.N))
+        // {
+        //     print("SceneIndex: " + npcData.SceneIndex.ToString());
+        //     print("CurrentPointID: " + npcData.CurrentPointID.ToString());
+        //     print("Position: " + npcData.Position.ToString());
+        //     print("Speed: " + npcData.Speed.ToString());
+        //     print("Height: " + npcData.Height.ToString());
+        // }
     }
 
     void ChooseRandomTargetPoint()
     {
         int index = Random.Range(0, navGraphData.GetData().Count);
         targetPoint = navGraphData.GetData()[index];
-        if (targetPoint.id == npcData.CurrentPointID)
-        {
-            ChooseRandomTargetPoint();
-        }
         Debug.Log("Target point: " + targetPoint.id);
     }
 
@@ -105,6 +103,10 @@ public class NavController : MonoBehaviour
                 resultStr += item.id.ToString();
             }
             Debug.Log(resultStr);
+
+
+            isMoving = true;
+            StartCoroutine(MoveToTargetPoint());
         }
     }
 
@@ -112,11 +114,29 @@ public class NavController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
+            if (SceneManager.GetActiveScene().buildIndex == 0)
+            {
+                return;
+            }
+            if (0 != editableNpcData.currentSceneIndex)
+            {
+                editableNpcData.currentPosition = activeNpc.GetComponent<Npc>().GetPosition();
+            }
             SceneManager.LoadScene(0);
+            isSceneChange = true;
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
+            if (SceneManager.GetActiveScene().buildIndex == 1)
+            {
+                return;
+            }
+            if (1 != editableNpcData.currentSceneIndex)
+            {
+                editableNpcData.currentPosition = activeNpc.GetComponent<Npc>().GetPosition();
+            }
             SceneManager.LoadScene(1);
+            isSceneChange = true;
         }
     }
 
@@ -124,33 +144,13 @@ public class NavController : MonoBehaviour
     {
         while (true)
         {
-            if (pathIsBuild())
+            if (chooseNextPoint)
             {
-                NavGraphPoint nextPoint;
                 if (targetPath.Count > 0)
                 {
                     nextPoint = targetPath[0];
                     targetPath.RemoveAt(0);
-                    if (nextPoint.sceneIndex != SceneManager.GetActiveScene().buildIndex && nextPoint.sceneIndex != npcData.SceneIndex)
-                    {
-                        print("Переход на др сцену");
-                    }
-                    if (nextPoint.sceneIndex != SceneManager.GetActiveScene().buildIndex && nextPoint.sceneIndex == npcData.SceneIndex)
-                    {
-                        print("Скрытое перемещение");
-                        yield return StartCoroutine(hiddenMovement(nextPoint));
-                        npcData.CurrentPointID = nextPoint.id;
-                    }
-                    if (nextPoint.sceneIndex == SceneManager.GetActiveScene().buildIndex && nextPoint.sceneIndex != npcData.SceneIndex)
-                    {
-                        print("Переход на активную сцену");
-                    }
-                    if (nextPoint.sceneIndex == SceneManager.GetActiveScene().buildIndex && nextPoint.sceneIndex == npcData.SceneIndex)
-                    {
-                        activeNpc = GameObject.FindGameObjectWithTag("NPC");
-                        print("Детальное движение");
-                        activeNpc.GetComponent<Npc>().moveTo(nextPoint);
-                    }
+                    chooseNextPoint = false;
                 }
                 else
                 {
@@ -158,11 +158,33 @@ public class NavController : MonoBehaviour
                     yield break;
                 }
             }
-            else
+            if (nextPoint.sceneIndex != SceneManager.GetActiveScene().buildIndex && nextPoint.sceneIndex != editableNpcData.currentSceneIndex)
             {
-                isMoving = false;
-                yield break;
+                print("Переход на др сцену");
             }
+            if (nextPoint.sceneIndex != SceneManager.GetActiveScene().buildIndex && nextPoint.sceneIndex == editableNpcData.currentSceneIndex)
+            {
+                print("Скрытое перемещение");
+                yield return StartCoroutine(hiddenMovement(nextPoint));
+            }
+            if (nextPoint.sceneIndex == SceneManager.GetActiveScene().buildIndex && nextPoint.sceneIndex != editableNpcData.currentSceneIndex)
+            {
+                print("Переход на активную сцену");
+            }
+            if (nextPoint.sceneIndex == SceneManager.GetActiveScene().buildIndex && nextPoint.sceneIndex == editableNpcData.currentSceneIndex)
+            {
+                if (isSceneChange)
+                {
+                    activeNpc = GameObject.FindGameObjectWithTag("NPC").GetComponent<Npc>();
+                    isSceneChange = false;
+                }
+                if (!activeNpc.moving)
+                {
+                    print("Детальное движение");
+                    activeNpc.moveTo(nextPoint);
+                }
+            }
+            yield return null;
         }
     }
 
@@ -170,10 +192,19 @@ public class NavController : MonoBehaviour
     {
         while (true)
         {
-            Vector3 dir = ((point.position + new Vector3(0, npcData.Height / 2, 0)) - npcData.Position).normalized * npcData.Speed / 5;
-            if (Mathf.Abs(Vector3.Distance(npcData.Position, (point.position + new Vector3(0, npcData.Height / 2, 0)))) > 1f)
+            if (nextPoint.sceneIndex != SceneManager.GetActiveScene().buildIndex && nextPoint.sceneIndex == editableNpcData.currentSceneIndex)
             {
-                npcData.Position += dir;
+                Vector3 dir = ((point.position + new Vector3(0, editableNpcData.height / 2, 0)) - editableNpcData.currentPosition).normalized * editableNpcData.speed;
+                if (Mathf.Abs(Vector3.Distance(editableNpcData.currentPosition, (point.position + new Vector3(0, editableNpcData.height / 2, 0)))) > 1f)
+                {
+                    editableNpcData.currentPosition += dir;
+                }
+                else
+                {
+                    editableNpcData.currentPointId = nextPoint.id;
+                    chooseNextPoint = true;
+                    yield break;
+                }
             }
             else
             {
