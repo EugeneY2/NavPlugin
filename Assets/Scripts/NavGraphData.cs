@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class NavGraphData : ScriptableObject
 { 
     public List<NavGraphPoint> data;
+
     public void AddToData(NavGraphPoint item)
     {
         if (data != null)

@@ -33,19 +33,19 @@ public class Npc : MonoBehaviour
         npcDataStorage.height = agent.height;
     }
 
-    public void moveTo(NavGraphPoint point)
+    public void MoveTo(NavGraphPoint point)
     {
         agent = GetComponent<NavMeshAgent>();
         agent.SetDestination(point.position + new Vector3(0, controller.editableNpcData.height / 2, 0));
         moving = true;
-        StartCoroutine(checkDistance(point.position + new Vector3(0, controller.editableNpcData.height / 2, 0), point.id));
+        StartCoroutine(CheckDistance(point.position + new Vector3(0, controller.editableNpcData.height / 2, 0), point.id));
     }
 
-    IEnumerator checkDistance(Vector3 pos, int id)
+    IEnumerator CheckDistance(Vector3 pos, int id)
     {
         while (true)
         {
-            if (Mathf.Abs(Vector3.Distance(transform.position, pos)) < 0.1f)
+            if (Vector3.Distance(transform.position, pos) < 0.1f)
             {
                 controller.editableNpcData.currentPointId = id;
                 moving = false;
@@ -54,7 +54,6 @@ public class Npc : MonoBehaviour
             }
             yield return null;
         }
-
     }
 
     public Vector3 GetPosition()

@@ -9,11 +9,9 @@ static class FindPath
         Dictionary<int, int> predecessor = new Dictionary<int, int>();
         List<int> connected = new List<int>();
         bool findComplete = false;
-
         NavGraphPoint currentPoint, startPoint, endPoint;
         navGraph.TryGetValue(start, out startPoint);
         navGraph.TryGetValue(end, out endPoint);
-
         pointsToCheck.Enqueue(startPoint);
 
         while (pointsToCheck.Count != 0)
