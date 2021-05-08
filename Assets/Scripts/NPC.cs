@@ -10,7 +10,16 @@ public class Npc : MonoBehaviour
     public NpcData npcDataStorage;
     NavMeshAgent agent;
     NavController controller;
-    public bool moving {get; set;}
+    public bool moving { get; set; }
+
+    void Awake()
+    {
+        GameObject[] objs = GameObject.FindGameObjectsWithTag("NPC");
+        if (objs.Length > 1)
+        {
+            Destroy(this.gameObject);
+        }
+    }
 
     void Start()
     {
@@ -48,6 +57,7 @@ public class Npc : MonoBehaviour
             if (Vector3.Distance(transform.position, pos) < 0.1f)
             {
                 controller.editableNpcData.currentPointId = id;
+                controller.editableNpcData.currentPosition = transform.position;
                 moving = false;
                 controller.chooseNextPoint = true;
                 yield break;
