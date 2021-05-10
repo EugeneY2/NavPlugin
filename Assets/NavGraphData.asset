@@ -12,3 +12,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4473f742651499c4cbf58fbd055841da, type: 3}
   m_Name: NavGraphData
   m_EditorClassIdentifier: 
+  data:
+  - id: 11
+    sceneIndex: 0
+    doorPairID: 0
+    position: {x: 16.21, y: 0, z: -16.18}
+    connectedIDs: 0c0000000d000000
+    isDoor: 0
+  - id: 12
+    sceneIndex: 0
+    doorPairID: 0
+    position: {x: 18.62, y: 0, z: 2.84}
+    connectedIDs: 0b0000000e0000000d0000000f000000
+    isDoor: 0
+  - id: 13
+    sceneIndex: 0
+    doorPairID: 0
+    position: {x: -10.37, y: 0, z: -14.03}
+    connectedIDs: 0b0000000e0000000c000000
+    isDoor: 0
+  - id: 14
+    sceneIndex: 0
+    doorPairID: 0
+    position: {x: -19.73, y: 0, z: 21.63}
+    connectedIDs: 170000000d0000000c0000000f000000
+    isDoor: 1
+  - id: 15
+    sceneIndex: 0
+    doorPairID: 0
+    position: {x: 9.33, y: 0, z: 19.12}
+    connectedIDs: 0e0000000c000000
+    isDoor: 0

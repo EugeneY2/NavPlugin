@@ -3,7 +3,6 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.AI;
-using System.Reflection;
 
 public class NavController : MonoBehaviour
 {
@@ -40,7 +39,6 @@ public class NavController : MonoBehaviour
         {
             navData.Add(item.id, item);
         }
-
         npcs = GameObject.FindGameObjectsWithTag("NPC");
         if (npcs.Length > 0)
         {

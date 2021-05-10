@@ -76,7 +76,7 @@ public class WayPointSystem : MonoBehaviour
     }
 }
 
-[System.Serializable]
+[Serializable]
 public class NavGraphPoint
 {
     [SerializeField]
