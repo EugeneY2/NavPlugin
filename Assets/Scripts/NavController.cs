@@ -10,7 +10,6 @@ public class NavController : MonoBehaviour
     public NavGraphData navGraphData;
     public NpcData npcData;
     public GameObject npcPrefab;
-
     NavGraphPoint startPoint, targetPoint;
     List<NavGraphPoint> targetPath;
     Dictionary<int, NavGraphPoint> navData;
@@ -22,8 +21,6 @@ public class NavController : MonoBehaviour
     NavGraphPoint nextPoint, prevPoint;
     public NpcData editableNpcData { get; set; }
     float passedDistance = 0, allDistance = 0;
-    NavMeshAgent mainNavMeshAgent;
-
 
     void Awake()
     {
@@ -49,7 +46,6 @@ public class NavController : MonoBehaviour
         {
             activeNpc = npcs[0].GetComponent<Npc>();
         }
-        mainNavMeshAgent = activeNpc.GetComponent<NavMeshAgent>();
         chooseNextPoint = true;
         StartCoroutine(SceneChange());
     }
@@ -88,19 +84,11 @@ public class NavController : MonoBehaviour
                 if (SceneManager.GetActiveScene().buildIndex == editableNpcData.currentSceneIndex)
                 {
                     SpawnNpc();
+                    npcs = GameObject.FindGameObjectsWithTag("NPC");
                     spawningNpc = false;
                 }
             }
         }
-
-
-
-        //FOR TESTING
-        // if (Input.GetKeyDown(KeyCode.G))
-        // {
-        //     SpawnNpc();
-        //     Destroy(npcs[0]);
-        // }
     }
 
     void ChooseRandomTargetPoint()
@@ -158,17 +146,20 @@ public class NavController : MonoBehaviour
                 {
                     yield return null;
                 }
-                if (0 != editableNpcData.currentSceneIndex)
+                else
                 {
-                    editableNpcData.currentPosition = activeNpc.GetPosition();
-                }
-                if (0 == editableNpcData.currentSceneIndex && npcMovedToFromScene)
-                {
-                    spawningNpc = true;
+                    if (0 != editableNpcData.currentSceneIndex)
+                    {
+                        editableNpcData.currentPosition = activeNpc.GetPosition();
+                    }
+                    if (npcMovedToFromScene)
+                    {
+                        spawningNpc = true;  
+                    }
                     yield return new WaitForSeconds(0.5f);
+                    SceneManager.LoadScene(0);
+                    isSceneChange = true;
                 }
-                SceneManager.LoadScene(0);
-                isSceneChange = true;
             }
             if (Input.GetKeyDown(KeyCode.Alpha2))
             {
@@ -176,17 +167,20 @@ public class NavController : MonoBehaviour
                 {
                     yield return null;
                 }
-                if (1 != editableNpcData.currentSceneIndex && npcMovedToFromScene)
+                else
                 {
-                    editableNpcData.currentPosition = activeNpc.GetPosition();
-                }
-                if (1 == editableNpcData.currentSceneIndex && npcMovedToFromScene)
-                {
-                    spawningNpc = true;
+                    if (1 != editableNpcData.currentSceneIndex && npcMovedToFromScene)
+                    {
+                        editableNpcData.currentPosition = activeNpc.GetPosition();
+                    }
+                    if (npcMovedToFromScene)
+                    {
+                        spawningNpc = true;
+                    }
                     yield return new WaitForSeconds(0.5f);
+                    SceneManager.LoadScene(1);
+                    isSceneChange = true;
                 }
-                SceneManager.LoadScene(1);
-                isSceneChange = true;
             }
             yield return null;
         }
@@ -222,6 +216,7 @@ public class NavController : MonoBehaviour
                     editableNpcData.currentSceneIndex = nextPoint.sceneIndex;
                     Destroy(npcs[0]);
                     npcMovedToFromScene = true;
+                    yield return new WaitForSeconds(0.5f);
                     chooseNextPoint = true;
                 }
                 if (nextPoint.sceneIndex != SceneManager.GetActiveScene().buildIndex && nextPoint.sceneIndex == editableNpcData.currentSceneIndex)
@@ -237,6 +232,7 @@ public class NavController : MonoBehaviour
                     editableNpcData.currentSceneIndex = nextPoint.sceneIndex;
                     npcMovedToFromScene = true;
                     spawningNpc = true;
+                    yield return new WaitForSeconds(0.5f);
                     chooseNextPoint = true;
                 }
                 if (nextPoint.sceneIndex == SceneManager.GetActiveScene().buildIndex && nextPoint.sceneIndex == editableNpcData.currentSceneIndex)
@@ -256,7 +252,7 @@ public class NavController : MonoBehaviour
     {
         while (true)
         {
-            if (nextPoint.sceneIndex != SceneManager.GetActiveScene().buildIndex && nextPoint.sceneIndex == editableNpcData.currentSceneIndex)
+            if (point.sceneIndex != SceneManager.GetActiveScene().buildIndex && point.sceneIndex == editableNpcData.currentSceneIndex)
             {
                 passedDistance = Vector3.Distance(editableNpcData.currentPosition, prevPoint.position);
                 Vector3 dir = ((point.position + new Vector3(0, editableNpcData.height / 2, 0)) - editableNpcData.currentPosition).normalized * editableNpcData.speed * (Mathf.Abs(allDistance - passedDistance) / allDistance);
@@ -266,10 +262,11 @@ public class NavController : MonoBehaviour
                 }
                 else
                 {
-                    editableNpcData.currentPointId = nextPoint.id;
-                    editableNpcData.currentPosition = nextPoint.position;
+                    editableNpcData.currentPointId = point.id;
+                    editableNpcData.currentPosition = point.position;
                     chooseNextPoint = true;
                     passedDistance = 0;
+                    print("Прибыл в точку: " + point.id);
                     yield break;
                 }
             }
@@ -277,7 +274,7 @@ public class NavController : MonoBehaviour
             {
                 yield break;
             }
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(0.5f);
         }
     }
 
@@ -285,7 +282,13 @@ public class NavController : MonoBehaviour
     {
         newNpc = Instantiate(npcPrefab);
         //COPY NavMeshAgent FIELDS
+        newNpc.GetComponent<NavMeshAgent>().baseOffset = editableNpcData.baseOffset;
         newNpc.GetComponent<NavMeshAgent>().speed = editableNpcData.speed;
+        newNpc.GetComponent<NavMeshAgent>().angularSpeed = editableNpcData.angularSpeed;
+        newNpc.GetComponent<NavMeshAgent>().acceleration = editableNpcData.acceleration;
+        newNpc.GetComponent<NavMeshAgent>().stoppingDistance = editableNpcData.stoppingDistance;
+        newNpc.GetComponent<NavMeshAgent>().radius = editableNpcData.radius;
+        newNpc.GetComponent<NavMeshAgent>().height = editableNpcData.height;
         activeNpc = newNpc.GetComponent<Npc>();
     }
 }

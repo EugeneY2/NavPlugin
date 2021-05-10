@@ -38,7 +38,12 @@ public class Npc : MonoBehaviour
         npcDataStorage.currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
         npcDataStorage.currentPointId = startWayPoint.GetComponent<WayPoint>().id;
         npcDataStorage.currentPosition = startWayPoint.GetComponent<WayPoint>().transform.position + new Vector3(0, agent.height / 2, 0);
+        npcDataStorage.baseOffset = agent.baseOffset;
         npcDataStorage.speed = agent.speed;
+        npcDataStorage.angularSpeed = agent.angularSpeed;
+        npcDataStorage.acceleration = agent.acceleration;
+        npcDataStorage.stoppingDistance = agent.stoppingDistance;
+        npcDataStorage.radius = agent.radius;
         npcDataStorage.height = agent.height;
     }
 
