@@ -45,6 +45,17 @@ public class WayPointSystem : MonoBehaviour
         wayPoints.Add(go);
     }
 
+    public void DeleteWayPoint(GameObject point)
+    {
+        if (wayPoints != null)
+        {
+            if (wayPoints.Contains(point))
+            {
+                wayPoints.Remove(point);
+            }
+        }
+    }
+
     public void ClearWayPoints()
     {
         wayPoints.Clear();
@@ -61,7 +72,7 @@ public class WayPointSystem : MonoBehaviour
             NavGraphPoint wpData = new NavGraphPoint();
             wpData.id = point.GetComponent<WayPoint>().id;
             wpData.sceneIndex = point.GetComponent<WayPoint>().sceneIndex;
-            if(point.GetComponent<WayPoint>().isDoor)
+            if (point.GetComponent<WayPoint>().isDoor)
             {
                 wpData.connectedIDs.Add(point.GetComponent<WayPoint>().doorPairID);
             }

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentSceneIndex: 0
   currentPointId: 13
-  currentPosition: {x: -10.37, y: 1, z: -14.03}
+  currentPosition: {x: -16.55, y: 1, z: 14.57}
   baseOffset: 1
   speed: 10
   angularSpeed: 120

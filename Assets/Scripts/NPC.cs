@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
@@ -11,15 +10,6 @@ public class Npc : MonoBehaviour
     NavMeshAgent agent;
     NavController controller;
     public bool moving { get; set; }
-
-    void Awake()
-    {
-        GameObject[] objs = GameObject.FindGameObjectsWithTag("NPC");
-        if (objs.Length > 1)
-        {
-            Destroy(this.gameObject);
-        }
-    }
 
     void Start()
     {
