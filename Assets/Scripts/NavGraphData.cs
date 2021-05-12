@@ -29,6 +29,11 @@ public class NavGraphData : ScriptableObject
         }
     }
 
+    public void ClearData()
+    {
+        data.Clear();
+    }
+    
     public List<NavGraphPoint> GetData()
     {
         return data;

@@ -13,57 +13,43 @@ MonoBehaviour:
   m_Name: NavGraphData
   m_EditorClassIdentifier: 
   data:
+  - id: 20
+    sceneIndex: 1
+    position: {x: 14.17, y: 0, z: -11.02}
+    connectedIDs: 0e0000001500000016000000
+    isDoor: 1
+  - id: 21
+    sceneIndex: 1
+    position: {x: -15.01, y: 0, z: 1.15}
+    connectedIDs: 14000000
+    isDoor: 0
+  - id: 22
+    sceneIndex: 1
+    position: {x: 9.56, y: 0, z: 11.33}
+    connectedIDs: 14000000
+    isDoor: 0
   - id: 11
     sceneIndex: 0
-    doorPairID: 0
     position: {x: 14.11, y: 0, z: -15.14}
     connectedIDs: 0f0000000d0000000c000000
     isDoor: 0
   - id: 12
     sceneIndex: 0
-    doorPairID: 0
     position: {x: -13.6, y: 0, z: -10.9}
     connectedIDs: 0b0000000d000000
     isDoor: 0
   - id: 13
     sceneIndex: 0
-    doorPairID: 0
     position: {x: -16.55, y: 0, z: 14.57}
     connectedIDs: 0b0000000f0000000c0000000e000000
     isDoor: 0
   - id: 14
     sceneIndex: 0
-    doorPairID: 0
     position: {x: 10.92, y: 0, z: 20.67}
-    connectedIDs: 150000000d0000000f000000
+    connectedIDs: 140000000d0000000f000000
     isDoor: 1
   - id: 15
     sceneIndex: 0
-    doorPairID: 0
     position: {x: 17.48, y: 0, z: 5.64}
     connectedIDs: 0b0000000d0000000e000000
-    isDoor: 0
-  - id: 21
-    sceneIndex: 1
-    doorPairID: 0
-    position: {x: 13.4, y: 0, z: -19.5}
-    connectedIDs: 0e0000001600000018000000
-    isDoor: 1
-  - id: 22
-    sceneIndex: 1
-    doorPairID: 0
-    position: {x: -14.63, y: 0, z: -1.08}
-    connectedIDs: 180000001700000015000000
-    isDoor: 0
-  - id: 23
-    sceneIndex: 1
-    doorPairID: 0
-    position: {x: -1.84, y: 0, z: 18.29}
-    connectedIDs: 16000000
-    isDoor: 0
-  - id: 24
-    sceneIndex: 1
-    doorPairID: 0
-    position: {x: 17.43, y: 0, z: 5.05}
-    connectedIDs: 1600000015000000
     isDoor: 0

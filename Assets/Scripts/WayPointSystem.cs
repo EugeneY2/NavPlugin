@@ -8,6 +8,7 @@ public class WayPointSystem : MonoBehaviour
 {
     public NavGraphData navGraphData;
     public List<GameObject> wayPoints;
+    int id;
 
     public void Init()
     {
@@ -35,12 +36,29 @@ public class WayPointSystem : MonoBehaviour
 
     public void AddNewWayPoint()
     {
+        var wps = GameObject.FindGameObjectsWithTag("WP");
+        if(wps.Length != 0)
+        {
+            id = wps[0].GetComponent<WayPoint>().id;
+            foreach (var item in wps)
+            {
+                if(item.GetComponent<WayPoint>().id > id)
+                {
+                    id = item.GetComponent<WayPoint>().id;
+                }
+            }
+            id++;
+        }
+        else
+        {
+            id = Int32.Parse((SceneManager.GetActiveScene().buildIndex + 1).ToString() + 0);
+        }
         GameObject go = Resources.Load<GameObject>("WayPoint");
         go = Instantiate<GameObject>(go);
         go.tag = "WP";
         go.transform.parent = this.transform;
-        go.name = "WayPoint_" + (SceneManager.GetActiveScene().buildIndex + 1).ToString() + (wayPoints.Count + 1);
-        go.GetComponent<WayPoint>().id = Int32.Parse((SceneManager.GetActiveScene().buildIndex + 1).ToString() + (wayPoints.Count + 1));
+        go.name = "WayPoint_" + id.ToString();
+        go.GetComponent<WayPoint>().id = id;
         go.GetComponent<WayPoint>().sceneIndex = SceneManager.GetActiveScene().buildIndex;
         wayPoints.Add(go);
     }
@@ -94,8 +112,6 @@ public class NavGraphPoint
     public int id;
     [SerializeField]
     public int sceneIndex;
-    [SerializeField]
-    public int doorPairID;
     [SerializeField]
     public Vector3 position;
     [SerializeField]

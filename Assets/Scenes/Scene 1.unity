@@ -535,7 +535,7 @@ MonoBehaviour:
   id: 14
   sceneIndex: 0
   isDoor: 1
-  doorPairID: 21
+  doorPairID: 20
 --- !u!4 &1018021545
 Transform:
   m_ObjectHideFlags: 0

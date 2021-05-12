@@ -9,5 +9,9 @@ public class NavGraphDataEditor : Editor
         NavGraphData ng = (NavGraphData)target;
         EditorUtility.SetDirty(ng);
         DrawDefaultInspector();
+        if(GUILayout.Button("Clear Data"))
+        {
+            ng.ClearData();
+        }
     }
 }
